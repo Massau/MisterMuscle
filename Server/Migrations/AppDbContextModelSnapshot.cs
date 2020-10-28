@@ -28,7 +28,7 @@ namespace ProjetoIntegrador.Server.Migrations
 
                     b.HasIndex("ProdutoId");
 
-                    b.ToTable("Carrinho");
+                    b.ToTable("Carrinhos");
                 });
 
             modelBuilder.Entity("ProjetoIntegrador.Shared.Categoria", b =>
