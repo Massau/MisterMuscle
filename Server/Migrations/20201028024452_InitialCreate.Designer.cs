@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ProjetoIntegrador.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201028020033_InitialCreate")]
+    [Migration("20201028024452_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,7 +30,7 @@ namespace ProjetoIntegrador.Server.Migrations
 
                     b.HasIndex("ProdutoId");
 
-                    b.ToTable("Carrinho");
+                    b.ToTable("Carrinhos");
                 });
 
             modelBuilder.Entity("ProjetoIntegrador.Shared.Categoria", b =>

@@ -28,14 +28,24 @@ public class CarrinhoController : Controller
 
     [HttpPost]
     [Route("Create")]
-    public async Task<ActionResult> Post([FromBody] Carrinho carrinho)
+    public async Task<ActionResult> Post([FromBody] Produto produto)
     {
+        Usuario usuario = new Usuario
+        {
+            Id = 1,
+            Nome = "Heron",
+            Email = "heronze@gmail.com",
+            Cpf = "46609031843",
+            Senha = "123456",
+            Celular = "99999999999",
+            Confirmarsenha = "123456",
+        };
         try
         {
             var novoCarrinho = new Carrinho
             {
-                UsuarioId = carrinho.UsuarioId,
-                ProdutoId = carrinho.ProdutoId,
+                UsuarioId = usuario.Id,
+                ProdutoId = produto.Id,
 
             };
 
@@ -56,31 +66,6 @@ public class CarrinhoController : Controller
         var carrinho = await db.Carrinhos.SingleOrDefaultAsync(carrinho => carrinho.UsuarioId == Convert.ToInt32(id));
         return Ok(carrinho);
     }
-
-
-    [HttpPut]
-    [Route("Update")]
-    public async Task<IActionResult> Put([FromBody] Carrinho carrinho)
-    {
-        if (!ModelState.IsValid)
-        {
-
-            return BadRequest(ModelState);
-
-        }
-
-        db.Entry(carrinho).State = EntityState.Modified;
-        try
-        {
-            await db.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            throw (ex);
-        }
-        return NoContent();
-    }
-
 
     [HttpDelete]
     [Route("Delete/{id}")]

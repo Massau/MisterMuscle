@@ -1,5 +1,5 @@
 @page "/Cadastro"
-@inject HttpClient  http
+@inject HttpClient http
 @inject NavigationManager NavigationManager
 
 <div class="d-flex justify-content-center">
@@ -9,7 +9,7 @@
                 <h4 class="card-title mt-2">Cadastre-se</h4>
             </div>
             <div class="card-body">
-                <EditForm Model="@usuario" @onreset="HandleReset"  OnValidSubmit="CreateUsuario">
+                <EditForm Model="@usuario" @onreset="HandleReset" OnValidSubmit="CreateUsuario">
                     <DataAnnotationsValidator />
                     <div class="form-row">
                         <div class="form-group col">
@@ -68,15 +68,7 @@
     </div>
 </div>
 
-
-
-
-
-
-@* falta implementar o valid submit no controller *@
-
 @code {
-    
     private Usuario usuario = new Usuario();
     protected async Task CreateUsuario()
     {

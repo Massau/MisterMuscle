@@ -133,7 +133,7 @@ namespace ProjetoIntegrador.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Carrinho",
+                name: "Carrinhos",
                 columns: table => new
                 {
                     UsuarioId = table.Column<int>(nullable: false),
@@ -141,15 +141,15 @@ namespace ProjetoIntegrador.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Carrinho", x => new { x.UsuarioId, x.ProdutoId });
+                    table.PrimaryKey("PK_Carrinhos", x => new { x.UsuarioId, x.ProdutoId });
                     table.ForeignKey(
-                        name: "FK_Carrinho_Produtos_ProdutoId",
+                        name: "FK_Carrinhos_Produtos_ProdutoId",
                         column: x => x.ProdutoId,
                         principalTable: "Produtos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Carrinho_Usuarios_UsuarioId",
+                        name: "FK_Carrinhos_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuarios",
                         principalColumn: "Id",
@@ -205,8 +205,8 @@ namespace ProjetoIntegrador.Server.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Carrinho_ProdutoId",
-                table: "Carrinho",
+                name: "IX_Carrinhos_ProdutoId",
+                table: "Carrinhos",
                 column: "ProdutoId");
 
             migrationBuilder.CreateIndex(
@@ -244,7 +244,7 @@ namespace ProjetoIntegrador.Server.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Carrinho");
+                name: "Carrinhos");
 
             migrationBuilder.DropTable(
                 name: "Estoques");
