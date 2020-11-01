@@ -38,5 +38,7 @@ namespace ProjetoIntegrador.Shared {
         public string Confirmarsenha { get; set; }
 
         public ICollection<Pedido> Pedidos { get; set; }
+
+        public ICollection<Carrinho> Carrinhos {get; set;}
     }
 }

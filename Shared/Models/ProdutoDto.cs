@@ -7,7 +7,7 @@ using System.Text;
 namespace ProjetoIntegrador.Shared
 {
 
-    public class Produto
+    public class ProdutoDto
     {
         [Required]
         public int Id { get; set; }
@@ -29,9 +29,9 @@ namespace ProjetoIntegrador.Shared
         public int Quantidade { get; set; }
 
         
-        public int FornecedorId { get; set;}
+        public string FornecedorId { get; set;}
         
-        public int CategoriaId { get; set; }
+        public string CategoriaId { get; set; }
 
 
 

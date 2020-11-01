@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ProjetoIntegrador.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201028024452_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20201030024134_PrimeiraMigration")]
+    partial class PrimeiraMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -59,8 +59,8 @@ namespace ProjetoIntegrador.Server.Migrations
                     b.Property<int>("Quantidade")
                         .HasColumnType("int");
 
-                    b.Property<int>("tipo_transacao")
-                        .HasColumnType("int");
+                    b.Property<string>("tipo_transacao")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -250,13 +250,13 @@ namespace ProjetoIntegrador.Server.Migrations
             modelBuilder.Entity("ProjetoIntegrador.Shared.Carrinho", b =>
                 {
                     b.HasOne("ProjetoIntegrador.Shared.Produto", "Produtos")
-                        .WithMany()
+                        .WithMany("Carrinhos")
                         .HasForeignKey("ProdutoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ProjetoIntegrador.Shared.Usuario", "Usuarios")
-                        .WithMany()
+                        .WithMany("Carrinhos")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

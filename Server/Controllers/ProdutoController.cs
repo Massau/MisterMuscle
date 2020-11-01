@@ -30,10 +30,11 @@ public class ProdutoController : Controller
 
     [HttpPost]
     [Route("Create")]
-    public async Task<ActionResult> Post([FromBody] Produto produto)
+    public async Task<ActionResult> Post([FromBody] ProdutoDto produto)
     {
         try
         {
+            
             var novoProduto = new Produto
             {
                 Nome = produto.Nome,
@@ -41,18 +42,33 @@ public class ProdutoController : Controller
                 Preco = produto.Preco,
                 ImagemProduto = produto.ImagemProduto,
                 Quantidade = produto.Quantidade,
-                FornecedorId = 1,
-                CategoriaId = 1,
+                FornecedorId = Convert.ToInt32(produto.FornecedorId),
+                CategoriaId = Convert.ToInt32(produto.CategoriaId),
                 
+                
+                  
             };
-           
-
-
-            
 
             db.Add(novoProduto);
-            await db.SaveChangesAsync();//INSERT INTO
+            await db.SaveChangesAsync();
+            var pegaId = novoProduto.Id;
+            
+
+            // salvar transação de cadastro de produto no estoque (entrada)
+            var novoEstoque = new Estoque
+            {
+                tipo_transacao = "entrada",
+                Quantidade = novoProduto.Quantidade,
+                ProdutoId = pegaId
+            };
+
+            db.Add(novoEstoque);
+            await db.SaveChangesAsync();
+
+            
             return Ok();
+
+
         }
         catch (Exception e)
         {

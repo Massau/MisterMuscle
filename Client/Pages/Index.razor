@@ -1,99 +1,57 @@
 ﻿@page "/"
+@using System.Net.Http
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
 
-<div class="container mb-4">
 
-    <div class="row my-2">
-        <div class="col mb-6">
+ 
+
+ <div class=" container-fluid card-deck viewport-100 mt-3">
+    
+        <div class="col-md-12 mb-3">
+            
             <div class="card shadow-lg bg-white rounded">
                 <img src="img/banner_integralmedica.jpg" class="image-responsive">
             </div>
-        </div>    
-    </div>
-
-    <section class="my-4">
-        <h2 class="mt-4 text-center font-weight-bold">Favoritos</h2>
-
-        <div class="card-deck">
-            <div class="card shadow-lg bg-white rounded">
-                <img src="img/whey_100_black_skull.jpg" class="card-img-top view overlay z-depth-1-half">
-                <div class="card-body">
-                    <h5 class="card-title text-center text-primary">Whey 900g Refil - Black Skull Caveira Preta</h5>
-                    <p class="card-text text-center text-secondary">De: R$ 279,90</p>
-                    <p class="card-text text-center text-secondary">3 X de R$ 50,00 sem juros</p>
-                    <h1 class="card-text text-center text-primary">250,90</h1>
-                </div>
-            </div>
-            <div class="card shadow-lg bg-white rounded">
-                <img src="img/muscletech.jpg" class="card-img-top view overlay z-depth-1-half">
-                <div class="card-body">
-                    <h5 class="card-title text-center text-primary">Premium Whey Protein Plus - Muscletech</h5>
-                    <p class="card-text text-center text-secondary">De: R$ 373,50</p>
-                    <p class="card-text text-center text-secondary">3 X de R$ 50,00 sem juros</p>
-                    <h1 class="card-text text-center text-primary">359,90</h1>
-                </div>
-            </div>
-            <div class="card shadow-lg bg-white rounded">
-                <img src="img/sinister-mass.jpg" class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title text-center text-primary">Hipercalórico - Sinister Mass</h5>
-                    <p class="card-text text-center text-secondary">De: 75,90</p>
-                    <p class="card-text text-center text-secondary">3 X de R$ 50,00 sem juros</p>
-                    <h1 class="card-text text-center text-primary">61,90</h1>
-                </div>
-            </div>
-            <div class="card shadow-lg bg-white rounded">
-                <img src="img/prostar_100_whey.jpg" class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title text-center text-primary">Whey - ProStar</h5>
-                    <p class="card-text text-center text-secondary">De: 79,90</p>
-                    <p class="card-text text-center text-secondary">3 X de R$ 50,00 sem juros</p>
-                    <h1 class="card-text text-center text-primary">65,90</h1>
-                </div>
-            </div>
+            <h2 class="mt-4 text-center font-weight-bold">Produtos</h2>  
+            
         </div>
-    </section>
+          
+    
 
-    <section class="my-4">
-        <h2 class="mt-4 text-center font-weight-bold">Novidades</h2>
-
-        <div class="card-deck">
-            <div class="card shadow-lg bg-white rounded">
-                <img src="img/whey_100_black_skull.jpg" class="card-img-top">
+    @foreach(var produto in ListaProdutos)
+    {
+        <div class="col-md-3">
+            <div class="card text-center shadow-lg bg-white rounded mb-3 card-produto">
+                <ImagemProduto ImagemRemota="@produto.ImagemProduto"/>
                 <div class="card-body">
-                    <h5 class="card-title text-center text-primary">Whey 900g Refil - Black Skull Caveira Preta</h5>
-                    <p class="card-text text-center text-secondary">De: R$ 279,90</p>
-                    <p class="card-text text-center text-secondary">3 X de R$ 50,00 sem juros</p>
-                    <h1 class="card-text text-center text-primary">250,90</h1>
+                    <h5 class="card-title text-center text-primary">@produto.Nome</h5>
+                    <p class="card-text text-center text-secondary">@String.Format("{0, 0:C2}", @produto.Preco)</p>
                 </div>
-            </div>
-            <div class="card shadow-lg bg-white rounded">
-                <img src="img/muscletech.jpg" class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title text-center text-primary">Premium Whey Protein Plus - Muscletech</h5>
-                    <p class="card-text text-center text-secondary">De: R$ 373,50</p>
-                    <p class="card-text text-center text-secondary">3 X de R$ 50,00 sem juros</p>
-                    <h1 class="card-text text-center text-primary">359,90</h1>
-                </div>
-            </div>
-            <div class="card shadow-lg bg-white rounded">
-                <img src="img/sinister-mass.jpg" class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title text-center text-primary">Hipercalórico - Sinister Mass</h5>
-                    <p class="card-text text-center text-secondary">De: 75,90</p>
-                    <p class="card-text text-center text-secondary">3 X de R$ 50,00 sem juros</p>
-                    <h1 class="card-text text-center text-primary">61,90</h1>
-                </div>
-            </div>
-            <div class="card shadow-lg bg-white rounded">
-                <img src="img/prostar_100_whey.jpg" class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title text-center text-primary">Whey - ProStar</h5>
-                    <p class="card-text text-center text-secondary">De: 79,90</p>
-                    <p class="card-text text-center text-secondary">3 X de R$ 50,00 sem juros</p>
-                    <h1 class="card-text text-center text-primary">65,90</h1>
-                </div>
-            </div>
-        </div>
-    </section>
+            </div> 
+        </div>      
+        
+    }
 </div>
+
+        
+        
+
+
+
+
+@code {
+    public List<Produto> ListaProdutos = new List<Produto>();
+    protected override async Task OnInitializedAsync()
+    {
+
+        var produtos = await Http.GetFromJsonAsync<List<Produto>>("/Produto/List");
+        foreach (var item in produtos)
+        {
+            ListaProdutos.Add(item);
+        }
+    }
+
+    
+}
 
