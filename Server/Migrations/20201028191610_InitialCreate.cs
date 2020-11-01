@@ -137,7 +137,8 @@ namespace ProjetoIntegrador.Server.Migrations
                 columns: table => new
                 {
                     UsuarioId = table.Column<int>(nullable: false),
-                    ProdutoId = table.Column<int>(nullable: false)
+                    ProdutoId = table.Column<int>(nullable: false),
+                    Quantidade = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ProjetoIntegrador.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201028024452_InitialCreate")]
+    [Migration("20201028191610_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,9 @@ namespace ProjetoIntegrador.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantidade")
                         .HasColumnType("int");
 
                     b.HasKey("UsuarioId", "ProdutoId");

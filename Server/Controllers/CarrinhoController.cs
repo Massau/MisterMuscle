@@ -17,15 +17,6 @@ public class CarrinhoController : Controller
         this.db = db;
     }
 
-    [HttpGet]
-    [Route("List")]
-    public async Task<IActionResult> Get()
-    {
-        var carrinhos = await db.Carrinhos.ToListAsync();
-        return Ok(carrinhos);
-
-    }
-
     [HttpPost]
     [Route("Create")]
     public async Task<ActionResult> Post([FromBody] Produto produto)
@@ -46,6 +37,7 @@ public class CarrinhoController : Controller
             {
                 UsuarioId = usuario.Id,
                 ProdutoId = produto.Id,
+                Quantidade = 1,
 
             };
 
@@ -60,10 +52,10 @@ public class CarrinhoController : Controller
     }
 
     [HttpGet]
-    [Route("GetId")]
-    public async Task<IActionResult> Get([FromQuery] string id)
+    [Route("GetId/{id}")]
+    public IActionResult Get([FromQuery] int id)
     {
-        var carrinho = await db.Carrinhos.SingleOrDefaultAsync(carrinho => carrinho.UsuarioId == Convert.ToInt32(id));
+        var carrinho = db.Carrinhos.Include("Produtos").ToList();
         return Ok(carrinho);
     }
 

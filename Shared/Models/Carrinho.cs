@@ -13,5 +13,6 @@ namespace ProjetoIntegrador.Shared
         public int UsuarioId { get; set; }
         public Produto Produtos { get; set; }
         public int ProdutoId { get; set; }
+        public int Quantidade { get; set; }
     }
 }
