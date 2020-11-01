@@ -17,21 +17,24 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                <td>@usuario.Nome</td>
-                <td>@usuario.Email</td>
-                <td>@usuario.Celular</td>
-                <td>
-                    <a href="#">
-                        <button type="button" class="btn btn-outline-warning">Editar</button>
-                    </a>
-                </td>
-                <td>
-                    <a href="#">
-                        <button type="button" class="btn btn-outline-danger">Excluir</button>
-                    </a>
-                </td>
-                </tr>
+                @foreach (var item in ListaUsuarios)
+                {                                    
+                    <tr>
+                        <td>@usuario.Nome</td>
+                        <td>@usuario.Email</td>
+                        <td>@usuario.Celular</td>
+                        <td>
+                            <a href="#">
+                                <button type="button" class="btn btn-outline-warning">Editar</button>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#">
+                                <button type="button" class="btn btn-outline-danger">Excluir</button>
+                            </a>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     }
