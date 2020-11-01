@@ -14,11 +14,11 @@
                                 <th scope="col">Nome</th>
                                 <th scope="col">Quantidade</th>
                                 <th scope="col">Preço</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         @foreach (var carrinho in ListaProdutos)
                         {
-
                             <tbody>
                                 <tr>
                                     <th style="width: 16.66%">
@@ -40,6 +40,10 @@
                                         </div>
                                     </td>
                                     <td>@String.Format("{0, 0:C2}", (@carrinho.Quantidade * @carrinho.Produtos.Preco))</td>
+                                    <td>
+                                        <button class="btn btn-danger" type="button" id="button-addon2"
+                                        @onclick="@(() => DeleteCarrinho(carrinho))">Excluir</button>
+                                    </td>
                                 </tr>
                             </tbody>
                         }
@@ -98,8 +102,8 @@
         var carrinho = await Http.GetFromJsonAsync<List<Carrinho>>("/Carrinho/GetId/1");
         foreach (var item in carrinho)
         {
-            subTotal = subTotal + (item.Quantidade * item.Produtos.Preco);
             ListaProdutos.Add(item);
+            subTotal = subTotal + (item.Quantidade * item.Produtos.Preco);
         }
     }
 
@@ -108,4 +112,11 @@
         await Http.PostAsJsonAsync("/Carrinho/Create", produto);
         NavigationManager.NavigateTo("/");
     }
+    private async Task DeleteCarrinho(Carrinho carrinho)
+    {
+        await Http.DeleteAsync("/Carrinho/Delete/" + carrinho.ProdutoId);
+        ListaProdutos.Remove(carrinho);
+        subTotal = subTotal - (carrinho.Quantidade * carrinho.Produtos.Preco);
+    }
+
 }

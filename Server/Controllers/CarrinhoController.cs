@@ -68,7 +68,7 @@ public class CarrinhoController : Controller
             return BadRequest(ModelState);
         }
 
-        var carrinho = await db.Carrinhos.FindAsync(id);
+        var carrinho = await db.Carrinhos.SingleAsync(carrinho => carrinho.ProdutoId == id && carrinho.UsuarioId == 1);
         if (carrinho == null)
         {
             return NotFound();
