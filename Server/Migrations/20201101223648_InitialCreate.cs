@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProjetoIntegrador.Server.Migrations
 {
-    public partial class PrimeiraMigration : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -137,8 +137,7 @@ namespace ProjetoIntegrador.Server.Migrations
                 columns: table => new
                 {
                     UsuarioId = table.Column<int>(nullable: false),
-                    ProdutoId = table.Column<int>(nullable: false),
-                    Quantidade = table.Column<int>(nullable: false)
+                    ProdutoId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -24,6 +24,9 @@ namespace ProjetoIntegrador.Server.Migrations
                     b.Property<int>("ProdutoId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
+
                     b.HasKey("UsuarioId", "ProdutoId");
 
                     b.HasIndex("ProdutoId");

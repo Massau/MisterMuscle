@@ -108,7 +108,6 @@ public class ProdutoController : Controller
         return NoContent();
     }
 
-
     [HttpDelete]
     [Route("Delete/{id}")]
     public async Task<ActionResult <Usuario>> Delete(int id)

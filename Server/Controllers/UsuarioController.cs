@@ -18,6 +18,14 @@ public class UsuarioController : Controller
         this.db = db;
     }
 
+    [HttpGet]
+    [Route("List")]
+    public async Task<IActionResult> Get()
+    {
+        var usuarios = await db.Usuarios.ToListAsync();
+        return Ok(usuarios);
+    }
+
     [HttpPost]
     [Route("Create")]
     public async Task<ActionResult> Post([FromBody] Usuario usuario)
