@@ -59,6 +59,27 @@ public class CarrinhoController : Controller
         return Ok(carrinho);
     }
 
+    [HttpPut]
+    [Route("Update")]
+    public async Task<IActionResult> Put([FromBody] Carrinho carrinho)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        db.Entry(carrinho).State = EntityState.Modified;
+        try
+        {
+            await db.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            throw (ex);
+        }
+        return NoContent();
+    }
+
     [HttpDelete]
     [Route("Delete/{id}")]
     public async Task<ActionResult<Carrinho>> Delete(int id)
