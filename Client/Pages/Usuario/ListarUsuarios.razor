@@ -1,0 +1,51 @@
+@page "/Usuarios/Index"
+@using System.Net.Http
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<div class="container my-4 viewport-100">
+    @foreach (var usuario in ListaUsuarios)
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Celular</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>@usuario.Nome</td>
+                <td>@usuario.Email</td>
+                <td>@usuario.Celular</td>
+                <td>
+                    <a href="#">
+                        <button type="button" class="btn btn-outline-warning">Editar</button>
+                    </a>
+                </td>
+                <td>
+                    <a href="#">
+                        <button type="button" class="btn btn-outline-danger">Excluir</button>
+                    </a>
+                </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    public List<Usuario> ListaUsuarios = new List<Usuario>();
+    protected override async Task OnInitializedAsync()
+    {
+        var usuarios = await Http.GetFromJsonAsync<List<Usuario>>("/Usuario/List");
+        foreach (var item in usuarios)
+        {
+            ListaUsuarios.Add(item);
+        }
+    }
+    
+}
