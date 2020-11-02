@@ -30,10 +30,11 @@ public class ProdutoController : Controller
 
     [HttpPost]
     [Route("Create")]
-    public async Task<ActionResult> Post([FromBody] Produto produto)
+    public async Task<ActionResult> Post([FromBody] ProdutoDto produto)
     {
         try
         {
+            
             var novoProduto = new Produto
             {
                 Nome = produto.Nome,
@@ -41,18 +42,33 @@ public class ProdutoController : Controller
                 Preco = produto.Preco,
                 ImagemProduto = produto.ImagemProduto,
                 Quantidade = produto.Quantidade,
-                FornecedorId = 1,
-                CategoriaId = 1,
+                FornecedorId = Convert.ToInt32(produto.FornecedorId),
+                CategoriaId = Convert.ToInt32(produto.CategoriaId),
                 
+                
+                  
             };
-           
-
-
-            
 
             db.Add(novoProduto);
-            await db.SaveChangesAsync();//INSERT INTO
+            await db.SaveChangesAsync();
+            var pegaId = novoProduto.Id;
+            
+
+            // salvar transação de cadastro de produto no estoque (entrada)
+            var novoEstoque = new Estoque
+            {
+                tipo_transacao = "entrada",
+                Quantidade = novoProduto.Quantidade,
+                ProdutoId = pegaId
+            };
+
+            db.Add(novoEstoque);
+            await db.SaveChangesAsync();
+
+            
             return Ok();
+
+
         }
         catch (Exception e)
         {
@@ -66,21 +82,45 @@ public class ProdutoController : Controller
     {
         // procura no banco na tabela products se tem algum Id igual e retorna o produto com todas suas informações
         var produto = await db.Produtos.SingleOrDefaultAsync(p => p.Id == Convert.ToInt32(id));
-        return Ok(produto);
+
+        var conversaoForm = new ProdutoDto()
+        {
+            Id = produto.Id,
+            Nome = produto.Nome,
+            Descricao = produto.Descricao,
+            Preco = produto.Preco,
+            ImagemProduto = produto.ImagemProduto,
+            Quantidade = produto.Quantidade,
+            FornecedorId = Convert.ToString(produto.FornecedorId),
+            CategoriaId = Convert.ToString(produto.CategoriaId)
+
+        };
+
+        return Ok(conversaoForm);
     }
 
-    
     [HttpPut]
     [Route("Update")]
-    public async Task<IActionResult> Put([FromBody] Produto produto)
+    public async Task<IActionResult> Put([FromBody] ProdutoDto produto)
     {
-        if (!ModelState.IsValid){
+        // if (!ModelState.IsValid){
 
-            return BadRequest(ModelState);
+        //     return BadRequest(ModelState);
 
-        }
+        // }
+        var produtoCerto = new Produto()
+        {       Id = produto.Id,
+                Nome = produto.Nome,
+                Descricao = produto.Descricao,
+                Preco = produto.Preco,
+                ImagemProduto = produto.ImagemProduto,
+                Quantidade = produto.Quantidade,
+                FornecedorId = Convert.ToInt32(produto.FornecedorId),
+                CategoriaId = Convert.ToInt32(produto.CategoriaId),
+            
+        };
 
-        db.Entry(produto).State = EntityState.Modified;
+        db.Entry(produtoCerto).State = EntityState.Modified;
         try
         {
             await db.SaveChangesAsync();
@@ -91,6 +131,7 @@ public class ProdutoController : Controller
         }
         return NoContent();
     }
+    
 
     [HttpDelete]
     [Route("Delete/{id}")]

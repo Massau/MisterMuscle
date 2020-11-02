@@ -11,7 +11,7 @@ namespace ProjetoIntegrador.Shared
     {
         [Required]
         public int Id { get; set; }
-        public int tipo_transacao { get; set; }
+        public string tipo_transacao { get; set; }
         public int Quantidade { get; set; }
 
         public Produto Produto { get; set; }
