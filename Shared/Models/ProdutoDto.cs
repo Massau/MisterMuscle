@@ -40,7 +40,6 @@ namespace ProjetoIntegrador.Shared
         public ICollection<Estoque> Estoques { get; set;}
         public Categoria Categoria { get; set; }
         public Fornecedor Fornecedor { get; set; }
-
         public ICollection<Carrinho> Carrinhos { get; set; }
         
     }

@@ -53,9 +53,11 @@ public class CarrinhoController : Controller
 
     [HttpGet]
     [Route("GetId/{id}")]
-    public IActionResult Get([FromQuery] int id)
+    public IActionResult Get(int id)
     {
-        var carrinho = db.Carrinhos.Include("Produtos").ToList();
+        var carrinho = db.Carrinhos
+        .Include("Produtos").Where(p => p.UsuarioId == id).ToList();
+
         return Ok(carrinho);
     }
 
