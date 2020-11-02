@@ -1,0 +1,185 @@
+@page "/CadastrarProduto"
+@using System.Net.Http
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+
+
+<div class="container mt-4 mb-4">
+  <EditForm Model="@produto" @onreset="Reset" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator/>
+      <div class="row col-sm-12 justify-content-around">
+        <div class="row col-sm-6">
+          <div class="card col-sm-12 px-lg-1">
+            <div class="card-body justify-content-end">
+            <p>Imagem do Produto</p>
+              <ImagemProduto ImagemRemota="produto.ImagemProduto" />
+              <hr >          
+              <div class="form-group row">
+                    <InputFile OnChange="HandleFile"></InputFile>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row col-sm-6">
+          <div class="card col-sm-12 px-lg-1">
+            <div class="card-body">
+              <p>Cadastro de Produto</p>
+                          
+                <div class="form-group">
+                  <label>Nome</label>
+                  <InputText @bind-Value="produto.Nome" class="form-control"  placeholder="Nome do produto" />
+                  <ValidationMessage For="@(() => produto.Nome)" />
+                </div>
+                <div class="form-group">
+                  <label>Descrição</label>
+                  <InputText @bind-Value="produto.Descricao" class="form-control"  placeholder="Descrição do produto" />
+                  <ValidationMessage For="@(() => produto.Descricao)" />
+                </div>
+                <div class="form-group">
+                  <label>Preço</label>
+                  <InputNumber @bind-Value="produto.Preco" class="form-control"  placeholder="Preço" />
+                  <ValidationMessage For="@(() => produto.Preco)" />
+                </div>
+                <div class="form-group">
+                  <label>Quantidade</label>
+                  <InputNumber @bind-Value="produto.Quantidade" class="form-control"  placeholder="Quantidade no Estoque" />
+                  <ValidationMessage For="@(() => produto.Quantidade)" />
+                </div>
+                <div class="form-group">
+                  <label>Categoria</label>
+                  <InputSelect @bind-Value="produto.CategoriaId" class="form-control">
+                    <option value="">Selecione a categoria do produto</option>
+                    @foreach (var c in categoriasLista)
+                    {
+                       <option value="@c.Id">@c.descricao_categoria</option>
+                    }
+
+                  </InputSelect>
+
+                <div class="form-group">
+                  <label>Fornecedor</label>
+                  <InputSelect @bind-Value="produto.FornecedorId" class="form-control">
+                    <option value="">Selecione o fornecedor do produto</option>
+                    @foreach (var f in fornecedoresLista)
+                    {
+                       <option value="@f.Id">@f.nome</option>
+                    }
+
+                  </InputSelect>
+                  
+                </div>
+                  
+                </div>
+                
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary mr-1">Enviar</button>
+                  <button type="reset" class="btn btn-secondary">Limpar</button>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+   </EditForm>  
+  <hr>
+</div>
+
+<div class=" container-fluid card-deck viewport-100 mt-3">
+    
+        <div class="col-md-12 mb-3"> 
+          <h2 class="mt-4 text-center font-weight-bold">Produtos Disponíveis</h2>  
+        </div>
+          
+    
+
+    @foreach(var produto in ListaProdutos)
+    {
+        <div class="col-md-3">
+            <div class="card text-center shadow-lg bg-white rounded mb-3 card-produto">
+                <ImagemProduto ImagemRemota="@produto.ImagemProduto"/>
+                <div class="card-body">
+                    <h5 class="card-title text-center text-primary">@produto.Nome</h5>
+                    <p class="card-text text-center text-secondary">@String.Format("{0, 0:C2}", @produto.Preco)</p>
+                    <a href="/EditarProduto/@produto.Id.ToString()" ><button class="btn btn-success">Editar</button></a>
+                    <button class="btn btn-danger" @onclick="@(() => Delete(produto.Id))">Deletar</button>
+                </div>
+            </div> 
+        </div>      
+        
+    }
+</div>
+
+
+@code {
+    private ProdutoDto produto = new ProdutoDto();
+
+    public byte[] ImagemUpload { get; set;}
+    private EditContext editContext { get; set; }
+
+    private void Reset()
+    {
+        produto = new ProdutoDto();
+        editContext = new EditContext(produto);
+    }
+
+    async Task HandleFile(IFileListEntry[] files)
+    {
+      var file = files.FirstOrDefault();
+      if(file != null)
+      {
+        var ms = new MemoryStream();
+        await file.Data.CopyToAsync(ms);
+        ImagemUpload = ms.ToArray();
+      }
+
+      if(ImagemUpload != null)
+      {
+        produto.ImagemProduto = ImagemUpload;
+        ImagemUpload = null;
+      }
+    }
+
+     private async Task HandleValidSubmit()
+    {
+        //Enviar dados para o Controller no Backend
+        var teste = await Http.PostAsJsonAsync("Produto/Create", produto);
+        NavigationManager.NavigateTo("/");
+        
+        
+
+    }
+
+    public List<Categoria> categoriasLista = new List<Categoria>();
+    public List<Produto> ListaProdutos = new List<Produto>();
+    public List<Fornecedor> fornecedoresLista = new List<Fornecedor>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var categorias = await Http.GetFromJsonAsync<List<Categoria>>("/Categoria/List");
+        foreach (var categoria in categorias)
+        {
+            categoriasLista.Add(categoria);
+        }
+
+        var fornecedores = await Http.GetFromJsonAsync<List<Fornecedor>>("/Fornecedor/List");
+        foreach (var fornecedor in fornecedores)
+        {
+           fornecedoresLista.Add(fornecedor); 
+        }
+
+        var produtos = await Http.GetFromJsonAsync<List<Produto>>("/Produto/List");
+        foreach (var item in produtos)
+        {
+            ListaProdutos.Add(item);
+        }
+    }
+
+    private async Task Delete(int prodId)
+    {
+        //call controller
+        await Http.DeleteAsync("/Produto/Delete/"+prodId);
+        NavigationManager.NavigateTo("/CadastrarProduto", true);
+    }
+
+
+}

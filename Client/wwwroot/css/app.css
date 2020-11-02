@@ -1,7 +1,10 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 html,
 body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family:'Roboto', sans-serif;
+    min-width: 100%;
+    overflow-x: hidden;
+    
 }
 
 a,
@@ -16,9 +19,9 @@ a,
 }
 
 app {
-    position: relative;
     display: flex;
     flex-direction: column;
+    
 }
 
 .top-row {
@@ -180,11 +183,16 @@ app {
 
 .viewport-100 {
     min-height: 100vh;
+    min-width: 100vw;
 }
 
-.teste {
-    width: 18rem;
+.img-produto {
+    height: 263px;
+    width: 263px;
 }
 
+.card-produto:hover {
+    border: 1px solid black;
+}
 
 }

@@ -163,7 +163,7 @@ namespace ProjetoIntegrador.Server.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    tipo_transacao = table.Column<int>(nullable: false),
+                    tipo_transacao = table.Column<string>(nullable: true),
                     Quantidade = table.Column<int>(nullable: false),
                     ProdutoId = table.Column<int>(nullable: false)
                 },
