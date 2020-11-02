@@ -52,6 +52,54 @@ public class UsuarioController : Controller
         }
     }
 
+
+    [HttpGet]
+    [Route("GetId")]
+    public async Task<IActionResult> Get([FromQuery] string id)
+    {
+        var usuario = await db.Usuarios.SingleOrDefaultAsync(u => u.Id == Convert.ToInt32(id));
+
+        var conversaoForm = new UsuarioDto()
+        {
+            Id = usuario.Id,
+            Nome = usuario.Nome,
+            Email = usuario.Email,
+            Cpf = usuario.Cpf,
+            Celular = usuario.Celular,
+            Senha = usuario.Senha
+        };
+
+        return Ok(conversaoForm);
+    }
+
+    [HttpPut]
+    [Route("Update")]
+    public async Task<IActionResult> Put([FromBody] UsuarioDto usuario)
+    {
+
+        var usuarioCerto = new Usuario()
+        {       
+            Id = usuario.Id,
+            Nome = usuario.Nome,
+            Email = usuario.Email,
+            Cpf = usuario.Cpf,
+            Celular = usuario.Celular,
+            Senha = usuario.Senha            
+        };
+
+        db.Entry(usuarioCerto).State = EntityState.Modified;
+        try
+        {
+            await db.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            throw (ex);
+        }
+        return NoContent();
+    }
+
+
     [HttpDelete]
     [Route("Delete/{id}")]
     public async Task<ActionResult <Usuario>> Delete(int id)
