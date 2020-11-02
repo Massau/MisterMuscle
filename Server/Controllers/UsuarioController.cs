@@ -51,4 +51,24 @@ public class UsuarioController : Controller
             return View(e);
         }
     }
+
+    [HttpDelete]
+    [Route("Delete/{id}")]
+    public async Task<ActionResult <Usuario>> Delete(int id)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var usuario = await db.Usuarios.FindAsync(id);
+        if(usuario == null)
+        {
+            return NotFound();
+        }
+
+        db.Usuarios.Remove(usuario);
+        await db.SaveChangesAsync();
+        return Ok(usuario);
+    }
 }
