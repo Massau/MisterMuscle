@@ -35,8 +35,8 @@ public class CarrinhoController : Controller
         {
             var novoCarrinho = new Carrinho
             {
-                UsuarioId = usuario.Id,
-                ProdutoId = produto.Id,
+                UsuarioId = Convert.ToInt32(usuario.Id),
+                ProdutoId = Convert.ToInt32(produto.Id),
                 Quantidade = 1,
 
             };

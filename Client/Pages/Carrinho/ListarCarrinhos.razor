@@ -86,7 +86,8 @@
                     <strong>@String.Format("{0, 0:C2}", -5 + 20 + @subTotal)</strong>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                    <button type="submit" class="btn btn-primary mr-1">Fechar Pedido</button>
+                    <button type="submit" class="btn btn-primary mr-1" @onclick="@(() => CreatePedido())">Fechar
+                        Pedido</button>
                 </li>
             </ul>
         </div>
@@ -139,5 +140,11 @@
         }
 
         await Http.PutAsJsonAsync("/Carrinho/Update", carrinho);
+    }
+    protected async Task CreatePedido()
+    {
+        await Http.PostAsJsonAsync("/Pedido/Create", ListaProdutos);
+
+        NavigationManager.NavigateTo("/");
     }
 }
