@@ -39,6 +39,6 @@ namespace ProjetoIntegrador.Shared {
 
         public ICollection<Pedido> Pedidos { get; set; }
 
-        public ICollection<Carrinho> Carrinhos {get; set;}
+        public virtual ICollection<Carrinho> Carrinhos {get; set;}
     }
 }

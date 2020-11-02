@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-
+using System.Text.Json.Serialization;
 
 namespace ProjetoIntegrador.Shared
 {
@@ -28,20 +28,21 @@ namespace ProjetoIntegrador.Shared
         [RegularExpression("(.*[1-9].*)|(.*[.].*[1-9].*)", ErrorMessage = "Informe a quantidade do produto que será inserida")]
         public int Quantidade { get; set; }
 
-        
-        public int FornecedorId { get; set;}
-        
+
+        public int FornecedorId { get; set; }
+
         public int CategoriaId { get; set; }
 
 
 
         public ICollection<ProdutoPedido> ProdutoPedido { get; set; }
 
-        public ICollection<Estoque> Estoques { get; set;}
+        public ICollection<Estoque> Estoques { get; set; }
         public Categoria Categoria { get; set; }
         public Fornecedor Fornecedor { get; set; }
 
+        [JsonIgnore]
         public ICollection<Carrinho> Carrinhos { get; set; }
-        
+
     }
 }

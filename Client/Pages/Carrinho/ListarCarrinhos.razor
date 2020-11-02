@@ -86,8 +86,7 @@
                     <strong>@String.Format("{0, 0:C2}", -5 + 20 + @subTotal)</strong>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                    <button type="submit" class="btn btn-primary mr-1" @onclick="@(() => CreatePedido())">Fechar
-                        Pedido</button>
+                    <button type="submit" class="btn btn-primary mr-1" @onclick="@(() => CreatePedido())">Ir para Pagamento</button>
                 </li>
             </ul>
         </div>
@@ -100,7 +99,7 @@
     protected override async Task OnInitializedAsync()
     {
 
-        var carrinho = await Http.GetFromJsonAsync<List<Carrinho>>("/Carrinho/GetId/1");
+        var carrinho = await Http.GetFromJsonAsync<List<Carrinho>>("/Carrinho/GetId/" + 1);
         foreach (var item in carrinho)
         {
             ListaProdutos.Add(item);
