@@ -1,0 +1,97 @@
+@page "/Usuario/Edit"
+@page "/Usuario/Edit/{item}"
+@using System.Net.Http
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<div class="d-flex justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-secondary my-4">
+            <div class="card-header bg-dark text-white">
+                <h4 class="card-title mt-2">Editar usuário</h4>
+            </div>
+            <div class="card-body">
+                <EditForm Model="@usuario" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label>Nome Completo</label>
+                            <InputText @bind-Value="usuario.Nome" class="form-control" />
+                            <ValidationMessage For="@( () => usuario.Nome)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label>E-mail</label>
+                            <InputText @bind-Value="usuario.Email" class="form-control" />
+                            <ValidationMessage For="@( () => usuario.Email)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label>Cpf</label>
+                            <InputText @bind-Value="usuario.Cpf" class="form-control" />
+                            <ValidationMessage For="@( () => usuario.Cpf)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label>Telefone Celular</label>
+                            <InputText @bind-Value="usuario.Celular" class="form-control" />
+                            <ValidationMessage For="@( () => usuario.Celular)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label>Senha</label>
+                            <InputText @bind-Value="usuario.Senha" class="form-control" type="password" />
+                            <ValidationMessage For="@( () => usuario.Senha)" />
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary mr-1">Enviar</button>
+                        <button type="reset" class="btn btn-secondary">Limpar</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    
+    private UsuarioDto usuario = new UsuarioDto();
+
+    [Parameter]
+    public string Item { get; set; }
+    private EditContext editContext { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var ItemId = Item;
+        usuario = await Http.GetFromJsonAsync<UsuarioDto>($"/Usuario/GetId?id={ItemId}");
+
+        editContext = new EditContext(usuario);        
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        
+        var teste = await Http.PutAsJsonAsync("Usuario/Update", usuario);
+        
+        NavigationManager.NavigateTo("//Usuarios/Index");        
+    }
+
+    private void Reset()
+    {
+        usuario = new UsuarioDto();
+        editContext = new EditContext(usuario);
+    }
+
+}
