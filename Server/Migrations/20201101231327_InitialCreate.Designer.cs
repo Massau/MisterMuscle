@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ProjetoIntegrador.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201028191610_InitialCreate")]
+    [Migration("20201101231327_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
