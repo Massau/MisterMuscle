@@ -21,13 +21,13 @@
                 @foreach (var item in ListaUsuarios)
                 {
                     <tr>
-                        <td>@usuario.Nome</td>
-                        <td>@usuario.Email</td>
-                        <td>@usuario.Celular</td>
-                        <td>
-                            <a href="#">
-                                <button type="button" class="btn btn-outline-warning">Editar</button>
-                            </a>
+                        <td>@item.Nome</td>
+                        <td>@item.Email</td>
+                        <td>@item.Celular</td>
+                        <td>                           
+                            <a href="/Usuario/Edit/@item.Id.ToString()" >
+                                <button class="btn btn-success">Editar</button>
+                            </a>                        
                         </td>
                         <td>
                             <button type="button" class="btn btn-outline-danger"
