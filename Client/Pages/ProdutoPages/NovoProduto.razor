@@ -93,7 +93,7 @@
         <div class="card-body">
           <h5 class="card-title text-center text-primary">@produto.Nome</h5>
           <p class="card-text text-center text-secondary">@String.Format("{0, 0:C2}", @produto.Preco)</p>
-          <a href="/Pagamento/@produto.Id.ToString()"><button class="btn btn-success">Editar</button></a>
+          <a href="/EditarProduto/@produto.Id.ToString()"><button class="btn btn-success">Editar</button></a>
           <button class="btn btn-danger" @onclick="@(() => Delete(produto.Id))">Deletar</button>
         </div>
       </div>
