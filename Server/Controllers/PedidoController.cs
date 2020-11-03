@@ -31,16 +31,6 @@ public class PedidoController : Controller
     [Route("Create")]
     public async Task<ActionResult<Pedido>> Post([FromBody] Pedido pedido)
     {
-        Usuario usuario = new Usuario
-        {
-            Id = 1,
-            Nome = "Heron",
-            Email = "heronze@gmail.com",
-            Cpf = "46609031843",
-            Senha = "123456",
-            Celular = "99999999999",
-            Confirmarsenha = "123456",
-        };
         try
         {
             db.Add(pedido);

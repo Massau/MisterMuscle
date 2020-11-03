@@ -37,6 +37,15 @@ public class ProdutoPedidoController : Controller
             {
                 db.Add(item);
                 await db.SaveChangesAsync();
+                var novoEstoque = new Estoque
+                {
+                    tipo_transacao = "saida",
+                    Quantidade = Convert.ToInt32(item.quantidade_produto),
+                    ProdutoId = item.ProdutoId
+                };
+
+                db.Add(novoEstoque);
+                await db.SaveChangesAsync();
             }
             catch (Exception e)
             {
