@@ -23,10 +23,10 @@ public class ProdutoController : Controller
     {
         var produtos = await db.Produtos.ToListAsync();
         return Ok(produtos);
-        
+
     }
 
-    
+
 
     [HttpPost]
     [Route("Create")]
@@ -34,7 +34,6 @@ public class ProdutoController : Controller
     {
         try
         {
-            
             var novoProduto = new Produto
             {
                 Nome = produto.Nome,
@@ -44,15 +43,11 @@ public class ProdutoController : Controller
                 Quantidade = produto.Quantidade,
                 FornecedorId = Convert.ToInt32(produto.FornecedorId),
                 CategoriaId = Convert.ToInt32(produto.CategoriaId),
-                
-                
-                  
             };
 
             db.Add(novoProduto);
             await db.SaveChangesAsync();
             var pegaId = novoProduto.Id;
-            
 
             // salvar transação de cadastro de produto no estoque (entrada)
             var novoEstoque = new Estoque
@@ -65,10 +60,7 @@ public class ProdutoController : Controller
             db.Add(novoEstoque);
             await db.SaveChangesAsync();
 
-            
             return Ok();
-
-
         }
         catch (Exception e)
         {
@@ -82,7 +74,6 @@ public class ProdutoController : Controller
     {
         // procura no banco na tabela products se tem algum Id igual e retorna o produto com todas suas informações
         var produto = await db.Produtos.SingleOrDefaultAsync(p => p.Id == Convert.ToInt32(id));
-
         var conversaoForm = new ProdutoDto()
         {
             Id = produto.Id,
@@ -109,17 +100,17 @@ public class ProdutoController : Controller
 
         // }
         var produtoCerto = new Produto()
-        {       Id = produto.Id,
-                Nome = produto.Nome,
-                Descricao = produto.Descricao,
-                Preco = produto.Preco,
-                ImagemProduto = produto.ImagemProduto,
-                Quantidade = produto.Quantidade,
-                FornecedorId = Convert.ToInt32(produto.FornecedorId),
-                CategoriaId = Convert.ToInt32(produto.CategoriaId),
-            
-        };
+        {
+            Id = produto.Id,
+            Nome = produto.Nome,
+            Descricao = produto.Descricao,
+            Preco = produto.Preco,
+            ImagemProduto = produto.ImagemProduto,
+            Quantidade = produto.Quantidade,
+            FornecedorId = Convert.ToInt32(produto.FornecedorId),
+            CategoriaId = Convert.ToInt32(produto.CategoriaId),
 
+        };
         db.Entry(produtoCerto).State = EntityState.Modified;
         try
         {
@@ -129,27 +120,27 @@ public class ProdutoController : Controller
         {
             throw (ex);
         }
+
         return NoContent();
     }
-    
+
 
     [HttpDelete]
     [Route("Delete/{id}")]
-    public async Task<ActionResult <Usuario>> Delete(int id)
+    public async Task<ActionResult<Usuario>> Delete(int id)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-
         var produto = await db.Produtos.FindAsync(id);
-        if(produto == null)
+        if (produto == null)
         {
             return NotFound();
         }
-
         db.Produtos.Remove(produto);
         await db.SaveChangesAsync();
+        
         return Ok(produto);
     }
 
