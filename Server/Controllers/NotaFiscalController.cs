@@ -10,11 +10,11 @@ using System.Collections.Generic;
 
 [ApiController]
 [Route("[controller]")]
-public class PedidoController : Controller
+public class NotaFiscalController : Controller
 {
     private readonly AppDbContext db;
 
-    public PedidoController(AppDbContext db)
+    public NotaFiscalController(AppDbContext db)
     {
         this.db = db;
     }
@@ -23,13 +23,13 @@ public class PedidoController : Controller
     [Route("List")]
     public async Task<IActionResult> Get()
     {
-        var pedidos = await db.Pedidos.ToListAsync();
-        return Ok(pedidos);
+        var notas = await db.NotaFiscais.ToListAsync();
+        return Ok(notas);
     }
 
     [HttpPost]
     [Route("Create")]
-    public async Task<ActionResult<Pedido>> Post([FromBody] Pedido pedido)
+    public async Task<ActionResult<NotaFiscal>> Post([FromBody] NotaFiscal notaFiscal)
     {
         Usuario usuario = new Usuario
         {
@@ -43,9 +43,18 @@ public class PedidoController : Controller
         };
         try
         {
-            db.Add(pedido);
+            var newNotaFiscal = new NotaFiscal
+            {
+                cpf_comprador = usuario.Cpf,
+                data = DateTime.Now,
+                numeroCartao = notaFiscal.numeroCartao,
+                dataVencimento = notaFiscal.dataVencimento,
+                cvv = notaFiscal.cvv,
+                nome = notaFiscal.nome,
+            };
+            db.Add(newNotaFiscal);
             await db.SaveChangesAsync();
-            return Ok(pedido);
+            return Ok(newNotaFiscal);
         }
         catch (Exception e)
         {

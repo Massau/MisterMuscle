@@ -1,0 +1,124 @@
+@page "/Pagamento"
+@using System.Net.Http
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<div class="row py-5">
+    <div class="col-md-8">
+        <EditForm Model="@notaFiscal" @onreset="Reset" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <div class="col-md-12">
+                <h4 class="mb-3">Cobrança</h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="cc-name">Nome no cartão</label>
+                        <InputText @bind-Value="notaFiscal.nome" class="form-control" placeholder="Nome do cartão" />
+                        <ValidationMessage For="@(() => notaFiscal.nome)" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="cc-number">Número do cartão</label>
+                        <InputNumber @bind-Value="notaFiscal.numeroCartao" class="form-control" placeholder="Número do cartão" />
+                        <ValidationMessage For="@(() => notaFiscal.numeroCartao)" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="cc-expiration">Data de vencimento</label>
+                        <InputText @bind-Value="notaFiscal.dataVencimento" class="form-control" placeholder="Ex: 01/2030" />
+                        <ValidationMessage For="@(() => notaFiscal.dataVencimento)" />
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="cc-cvv">CVV</label>
+                        <InputNumber @bind-Value="notaFiscal.cvv" class="form-control" placeholder="CVV" />
+                        <ValidationMessage For="@(() => notaFiscal.cvv)" />
+                    </div>
+                </div>
+                <hr class="mb-4">
+                <button type="submit" class="btn btn-primary ">Finalizar compra</button>
+            </div>
+        </EditForm>
+    </div>
+    <div class="col-md-4">
+        <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                <div>
+                    <h6 class="my-0">Subtotal</h6>
+                </div>
+                <span class="text-muted">@String.Format("{0, 0:C2}", @subTotal)</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                <div>
+                    <h6 class="my-0">Frete</h6>
+                    <small class="text-muted"> Envio para Av. Paulista, 1541</small>
+                </div>
+                <span class="text-muted">@String.Format("{0, 0:C2}", 20)</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between bg-light">
+                <div class="text-success">
+                    <h6 class="my-0">Cupom</h6>
+                    <small>TESTE</small>
+                </div>
+                <span class="text-success">@String.Format("{0, 0:C2}", -5)</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Total</span>
+                <strong>@String.Format("{0, 0:C2}", -5 + 20 + @subTotal)</strong>
+            </li>
+        </ul>
+    </div>
+</div>
+
+@code {
+    private NotaFiscal notaFiscal = new NotaFiscal();
+    public List<Carrinho> ListaProdutos = new List<Carrinho>();
+    public decimal subTotal = 0;
+    protected override async Task OnInitializedAsync()
+    {
+
+        var carrinho = await Http.GetFromJsonAsync<List<Carrinho>>("/Carrinho/GetId/" + 1);
+        foreach (var item in carrinho)
+        {
+            ListaProdutos.Add(item);
+            subTotal = subTotal + (item.Quantidade * item.Produtos.Preco);
+        }
+    }
+    private void Reset()
+    {
+    }
+    private async Task HandleValidSubmit()
+    {
+        var response = await Http.PostAsJsonAsync("NotaFiscal/Create", notaFiscal);
+        notaFiscal = await response.Content.ReadFromJsonAsync<NotaFiscal>();
+        await CreatePedido();
+        NavigationManager.NavigateTo("/");
+    }
+    protected async Task CreatePedido()
+    {
+        var newPedido = new Pedido
+        {
+            NotaFiscalId = notaFiscal.Id,
+            UsuarioId = 1,
+            data = DateTime.Now,
+            total = -5 + 20 + subTotal,
+        };
+        var response = await Http.PostAsJsonAsync("/Pedido/Create", newPedido);
+        newPedido = await response.Content.ReadFromJsonAsync<Pedido>();
+            
+     List<ProdutoPedido> produtoPedido = new List<ProdutoPedido>();
+        foreach (Carrinho item in ListaProdutos)
+        {
+            
+            var newProdutoPedido = new ProdutoPedido
+            {
+                preco_unitario_produto = item.Produtos.Preco,
+                preco_total_produto = item.Quantidade * item.Produtos.Preco,
+                quantidade_produto = item.Quantidade,
+                ProdutoId = item.Produtos.Id,
+                PedidoId = newPedido.Id,
+            };
+            produtoPedido.Add(newProdutoPedido);
+            await Http.DeleteAsync("/Carrinho/Delete/" + item.Produtos.Id);
+        }
+        await Http.PostAsJsonAsync("/ProdutoPedido/Create", produtoPedido);
+    }
+}
