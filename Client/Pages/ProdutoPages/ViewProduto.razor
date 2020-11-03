@@ -1,0 +1,95 @@
+@page "/ViewProduto"
+@page "/ViewProduto/{Item}"
+@using System.Net.Http
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<div class="container  viewport-100 ">
+    <div class="row shadow-lg bg-white rounded m-4">
+      <div class="col-md-6 d-flex justify-content-center align-items-center">
+        <ImagemProduto ImagemRemota=produto.ImagemProduto />
+      </div>
+      <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
+        <h2>@produto.Nome</h2>
+        <p>@produto.Descricao</p>
+        <h4>@String.Format("{0, 0:C2}", @produto.Preco)</h4>
+        <button class="btn btn-primary" @onclick="@(() => CreateCarrinho(produto))"><i class="fas fa-shopping-cart text-white"></i></button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h3 class="text-center mb-4">Veja também</h3>
+      </div>
+    </div>
+    <div class="container d-flex flex-row">
+      @foreach(var produto in ListaProdutos)
+      {
+        @if (produto.Id != Convert.ToInt32(Item))
+        {
+          <div class="col">
+                  <div class="card text-center shadow-lg bg-white rounded mb-3 card-produto">
+                      <ImagemProduto ImagemRemota="@produto.ImagemProduto"/>
+                      <div class="card-body">
+                          <h5 class="card-title text-center text-primary">@produto.Nome</h5>
+                          <p class="card-text text-center text-secondary">@String.Format("{0, 0:C2}", @produto.Preco)</p>
+                          <a href="/ViewProduto/@produto.Id.ToString()" ><button class="btn btn-success">Ver mais</button></a>
+                      </div>
+                  </div> 
+              </div>          
+        }        
+      }
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    
+   
+    
+@code {
+     private Produto produto = new Produto();
+     public List<Produto> ListaProdutos = new List<Produto>();
+    
+    
+    public byte[] ImagemUpload { get; set;}
+
+    [Parameter]
+    public string Item { get; set; }
+   
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var ItemId = Item;
+        produto = await Http.GetFromJsonAsync<Produto>($"/View/GetId?id={ItemId}");
+        
+        var produtos = await Http.GetFromJsonAsync<List<Produto>>("/Produto/List");
+        foreach (var item in produtos)
+        {
+            ListaProdutos.Add(item);
+        }
+    }
+
+    protected async Task CreateCarrinho(Produto produto)
+    {
+        await Http.PostAsJsonAsync("/Carrinho/Create", produto);
+        NavigationManager.NavigateTo("/Carrinhos");
+    }
+
+
+
+
+
+
+
+}    
+
+   
