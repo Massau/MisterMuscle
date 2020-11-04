@@ -27,6 +27,14 @@ public class PedidoController : Controller
         return Ok(pedidos);
     }
 
+    [HttpGet]
+    [Route("GetId/{id}")]
+    public IActionResult Get(int id)
+    {
+        var pedido = db.ProdutoPedidos.Include("Produto").Include("Pedido").Where(p => p.Pedido.UsuarioId == id).ToList();
+        return Ok(pedido);
+    }
+    
     [HttpPost]
     [Route("Create")]
     public async Task<ActionResult<Pedido>> Post([FromBody] Pedido pedido)

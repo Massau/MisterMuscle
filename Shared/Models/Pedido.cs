@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-
+using System.Text.Json.Serialization;
 
 namespace ProjetoIntegrador.Shared
 {
@@ -19,7 +19,8 @@ namespace ProjetoIntegrador.Shared
         public DateTime data { get; set; }
         public NotaFiscal NotaFiscal { get; set; }
         public Usuario Usuario { get; set; }
-        public List<ProdutoPedido> ProdutoPedido { get; set; }
+        [JsonIgnore]
+        public ICollection<ProdutoPedido> ProdutoPedido { get; set; }
 
     }
 }

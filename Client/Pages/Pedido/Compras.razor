@@ -1,0 +1,65 @@
+@page "/Compras"
+@using System.Net.Http
+@using ProjetoIntegrador.Shared
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<div class="container mb-4 viewport-100 mt-4">
+    <h4>Histórico de Pedidos</h4>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Produtos</th>
+                                <th scope="col">Data</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        @foreach ((Pedido pedido, string texto) lista in ListaPedido)
+                        {
+                            <tr>
+                                <td>@lista.texto</td>
+                                <td>@lista.pedido.data.ToString("dd MMMM yyyy")</td>
+                                <td>@String.Format("{0, 0:C2}", @lista.pedido.total)</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public decimal subTotal = 0;
+    public List<ProdutoPedido> ListaProdutoPedido = new List<ProdutoPedido>();
+    public List<(Pedido, string)> ListaPedido = new List<(Pedido, string)>();
+    public List<(Pedido, string)> ListaPedido2 = new List<(Pedido, string)>();
+    protected override async Task OnInitializedAsync()
+    {
+        var pedido = await Http.GetFromJsonAsync<List<ProdutoPedido>>("/Pedido/GetId/" + 1);
+        bool pular = true;
+        foreach (var item in pedido)
+        {
+            ListaProdutoPedido.Add(item);
+            pular = true;
+            foreach ((Pedido pedidos, string texto) listaPedidos in ListaPedido2)
+            {
+                if (item.PedidoId == listaPedidos.pedidos.Id)
+                {
+                    pular = false;
+                    ListaPedido.Remove(listaPedidos);
+                    ListaPedido.Add((listaPedidos.pedidos, listaPedidos.texto + ", " + item.Produto.Nome));
+                }
+            }
+            if (pular)
+            {
+                ListaPedido.Add((item.Pedido, item.Produto.Nome));
+                ListaPedido2.Add((item.Pedido, item.Produto.Nome));
+            }
+        }
+    }
+}
