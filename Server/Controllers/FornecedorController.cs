@@ -23,11 +23,5 @@ public class FornecedorController : Controller
     {
         var fornecedores = await db.Fornecedores.ToListAsync();
         return Ok(fornecedores);
-        
     }
-
-    
-
-    
-
 }

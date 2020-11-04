@@ -33,9 +33,8 @@ namespace ProjetoIntegrador.Shared
 
         public int CategoriaId { get; set; }
 
-
-
-        public ICollection<ProdutoPedido> ProdutoPedido { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<ProdutoPedido> ProdutoPedido { get; set; }
 
         public ICollection<Estoque> Estoques { get; set; }
         public Categoria Categoria { get; set; }
@@ -43,6 +42,5 @@ namespace ProjetoIntegrador.Shared
 
         [JsonIgnore]
         public ICollection<Carrinho> Carrinhos { get; set; }
-
     }
 }

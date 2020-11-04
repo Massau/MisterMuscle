@@ -26,7 +26,7 @@ public class ProdutoPedidoController : Controller
         var produtoPedidos = await db.ProdutoPedidos.ToListAsync();
         return Ok(produtoPedidos);
     }
-
+    
     [HttpPost]
     [Route("Create")]
     public async Task<ActionResult<ProdutoPedido>> Post([FromBody] List<ProdutoPedido> produtoPedido)
