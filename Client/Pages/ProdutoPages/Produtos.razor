@@ -1,0 +1,92 @@
+@page "/produtos"
+@using System.Net.Http
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<div class="container-fluid viewport-100">
+  <hr>
+  <div class="float-right">
+    <button class="btn btn-primary" type="blue">
+        <NavLink class="link" href="/produtos/cadastro">
+            <span aria-hidden="true"></span> Cadastrar Novo Produto
+        </NavLink>
+    </button>
+  </div>
+  <hr style="margin-top: 70px;">
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Fornecedor</th>
+        <th scope="col">Quantidade</th>
+        <th scope="col">Categoria</th>
+        <th scope="col" style="text-align: center;">Ações</th>
+      </tr>
+    </thead>
+    @foreach (var produto in ListaProdutos)
+    {
+    <tbody>
+      <tr>
+        <th scope="row">@produto.Id</th>
+        <td>@produto.Nome</td>
+        <td>@produto.FornecedorId</td>
+        <td>@produto.Quantidade</td>
+        <td>@produto.CategoriaId</td>
+        <td style="text-align: center;">
+          <button type="button" class="btn btn-primary dropdown-toggle" text-center data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Ação
+          </button>
+          <div class="dropdown-menu">
+            <a href="/editar/produto/@produto.Id.ToString()"><button class="btn btn-success" display-block style="width: 100px;" >Editar</button></a>
+            <button class="btn btn-danger" style="width: 100px;" @onclick="@(() => Delete(produto.Id))">Deletar</button>
+          </div>
+        </td>
+        
+      </tr>
+    </tbody>
+    }
+  </table>
+  
+  <hr>
+</div>
+
+@code {
+  private ProdutoDto produto = new ProdutoDto();
+  public byte[] ImagemUpload { get; set; }
+  private EditContext editContext { get; set; }
+
+  private void Reset()
+  {
+    produto = new ProdutoDto();
+    editContext = new EditContext(produto);
+  }
+  public List<Categoria> categoriasLista = new List<Categoria>();
+  public List<Produto> ListaProdutos = new List<Produto>();
+  public List<Fornecedor> fornecedoresLista = new List<Fornecedor>();
+  protected override async Task OnInitializedAsync()
+  {
+    var categorias = await Http.GetFromJsonAsync<List<Categoria>>("/Categoria/List");
+    foreach (var categoria in categorias)
+    {
+      categoriasLista.Add(categoria);
+    }
+    var fornecedores = await Http.GetFromJsonAsync<List<Fornecedor>>("/Fornecedor/List");
+    foreach (var fornecedor in fornecedores)
+    {
+      fornecedoresLista.Add(fornecedor);
+    }
+    var produtos = await Http.GetFromJsonAsync<List<Produto>>("/Produto/List");
+    foreach (var item in produtos)
+    {
+      ListaProdutos.Add(item);
+    }
+  }
+
+  private async Task Delete(int prodId)
+  {
+    //call controller
+    await Http.DeleteAsync("/Produto/Delete/" + prodId);
+    NavigationManager.NavigateTo("/produtos", true);
+  }
+}
